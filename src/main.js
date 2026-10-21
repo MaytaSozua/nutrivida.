@@ -31,4 +31,4 @@ async function verificarAPI() {
   }
 }
 
-verificarAPI();
+verificarAPI().catch(console.error);
