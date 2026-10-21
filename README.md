@@ -67,3 +67,37 @@ Quando o frontend e a API estão executando corretamente, a página exibe o stat
 Status do desenvolvimento
 
 O projeto está em desenvolvimento. As funcionalidades de gestão de doações serão implementadas ao longo das etapas do Projeto Integrador.
+
+Como executar o projeto
+
+Pré-requisitos
+
+Git
+
+Vite+ instalado
+
+Executar a aplicação
+
+Abra o terminal na pasta do projeto.
+
+Inicie a API:
+
+vp run api
+
+Em outro terminal, inicie o frontend:
+
+vp dev
+
+Acesse o endereço local exibido no terminal do frontend.
+
+Verificar a API
+
+Com a API em execução, acesse:
+
+http://localhost:3000/api/health
+
+A rota deve retornar um JSON indicando que a API está funcionando.
+
+Status do projeto
+
+Versão inicial acadêmica do NutriVida, com frontend, API REST e controle de versão configurados.
