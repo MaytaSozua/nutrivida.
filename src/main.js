@@ -24,7 +24,8 @@ async function verificarAPI() {
 
     const dados = await resposta.json();
 
-    status.textContent = `Conexão: ${dados.status} — ${dados.app}`;
+    const dataHora = new Date(dados.hora).toLocaleString("pt-BR");
+    status.textContent = `Conexão: ${dados.status} — NutriVida — ${dataHora}`;
   } catch (erro) {
     status.textContent = "Não foi possível conectar à API.";
     console.error(erro);
