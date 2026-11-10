@@ -32,7 +32,14 @@ CREATE TABLE categoria (
     descricao TEXT,
     ativo BOOLEAN DEFAULT TRUE
 );
-
+-- DADOS INICIAIS: CATEGORIA
+INSERT INTO categoria (nome, descricao) VALUES
+('Grãos e Cereais', 'Arroz, feijão, milho e outros cereais.'),
+('Frutas', 'Frutas frescas para doação.'),
+('Verduras e Legumes', 'Verduras e legumes frescos.'),
+('Leite e Derivados', 'Leite, queijo e outros derivados.'),
+('Enlatados', 'Alimentos enlatados e conservados.'),
+('Massas', 'Macarrão e outros tipos de massas.');
 
 -- TABELA: USUARIO
 CREATE TABLE usuario (
@@ -42,6 +49,7 @@ CREATE TABLE usuario (
     senha VARCHAR(255) NOT NULL,
     perfil VARCHAR(20) NOT NULL
 );
+
 
 
 -- TABELA: FAMILIA
