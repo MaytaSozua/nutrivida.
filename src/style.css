@@ -6,243 +6,505 @@
   box-sizing: border-box;
 }
 
+:root {
+  font-family: Arial, sans-serif;
+  color: #263b2b;
+  background: #f4f7f3;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f3f8f2;
-  color: #263b2b;
+  min-width: 320px;
+  min-height: 100vh;
   line-height: 1.5;
 }
 
-main {
-  width: calc(100% - 30px);
-  max-width: 1150px;
-  margin: 40px auto;
-  padding: 40px 35px;
-  text-align: center;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 5px 25px rgba(35, 75, 45, 0.08);
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
-h1 {
-  margin-bottom: 10px;
-  color: #267342;
-  font-size: 42px;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-main > p {
-  color: #657568;
-  font-size: 17px;
-  margin-bottom: 30px;
-}
-
-h2 {
-  color: #267342;
-  margin-top: 0;
-  margin-bottom: 25px;
-  font-size: 24px;
-}
-
-section {
-  margin-top: 30px;
-  padding: 30px;
-  background: #f8fbf7;
-  border: 1px solid #edf3eb;
-  border-radius: 16px;
+button {
+  cursor: pointer;
 }
 
 /* =========================================
-   STATUS DA API
+   ESTRUTURA PRINCIPAL
 ========================================= */
 
-#api-status,
-#categorias-status {
-  color: #657568;
-  line-height: 1.6;
+#app {
+  min-height: 100vh;
+}
+
+.layout-principal {
+  display: flex;
+  min-height: 100vh;
 }
 
 /* =========================================
-   CATEGORIAS
+   MENU LATERAL
 ========================================= */
 
-#lista-categorias {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 15px;
-  padding: 0;
-  margin-top: 20px;
-  list-style: none;
+.menu-lateral {
+  width: 255px;
+  min-width: 255px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 20px;
+  background: #176b43;
+  color: #ffffff;
 }
 
-#lista-categorias li {
-  padding: 22px 15px;
-  background: #ffffff;
-  border: 1px solid #dcebdc;
-  border-radius: 12px;
-  text-align: center;
-  transition: 0.2s;
-}
-
-#lista-categorias li:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 14px rgba(35, 75, 45, 0.1);
-}
-
-#lista-categorias strong {
-  display: block;
-  color: #267342;
-  font-size: 17px;
-  margin-bottom: 8px;
-}
-
-#lista-categorias p {
-  margin: 0;
-  color: #657568;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-/* =========================================
-   FORMULÁRIO DE DOADORES
-========================================= */
-
-#form-doador {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+.marca {
+  display: flex;
   align-items: center;
-  gap: 16px 12px;
-  text-align: left;
+  gap: 12px;
+  padding: 0 8px 35px;
 }
 
-#form-doador label,
-#form-doacao label {
-  color: #405b47;
+.marca-icone {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: #ffffff;
+  color: #176b43;
+  font-size: 25px;
   font-weight: bold;
 }
 
-#form-doador input {
-  width: 100%;
-  min-width: 0;
-  padding: 12px;
-  border: 1px solid #d5e4d5;
-  border-radius: 8px;
-  background: #ffffff;
-  color: #263b2b;
-  font-size: 15px;
-  outline: none;
-  transition: 0.2s;
+.marca h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 23px;
 }
 
-#form-doador input:focus {
-  border-color: #267342;
-  box-shadow: 0 0 0 3px rgba(38, 115, 66, 0.1);
+.marca p {
+  margin: 2px 0 0;
+  color: #d5eadc;
+  font-size: 12px;
+}
+
+.navegacao {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navegacao a {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 12px 15px;
+  border-radius: 9px;
+  color: #e3f1e8;
+  font-size: 15px;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.navegacao a:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.navegacao a.ativo {
+  background: #ffffff;
+  color: #176b43;
+  font-weight: bold;
+}
+
+.menu-rodape {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: auto;
+  padding: 20px 8px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.menu-rodape strong {
+  display: block;
+  font-size: 13px;
+}
+
+.menu-rodape p {
+  margin: 4px 0 0;
+  color: #d5eadc;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.indicador-api {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  margin-top: 5px;
+  border-radius: 50%;
+  background: #a8e6b9;
 }
 
 /* =========================================
-   FORMULÁRIO DE DOAÇÕES
+   ÁREA DE CONTEÚDO
 ========================================= */
 
-#form-doacao {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: 18px 12px;
-  text-align: left;
+.conteudo-principal {
+  flex: 1;
+  min-width: 0;
+  padding: 42px;
 }
 
-#form-doacao input,
-#form-doacao select,
-#form-doacao textarea {
+.cabecalho-pagina {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.cabecalho-pagina h2 {
+  margin: 5px 0 7px;
+  color: #204b34;
+  font-size: 30px;
+}
+
+.cabecalho-pagina p {
+  margin: 0;
+  color: #718075;
+  font-size: 15px;
+}
+
+.sobretitulo {
+  color: #36845a;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+/* =========================================
+   PÁGINA INICIAL
+========================================= */
+
+.cartao-boas-vindas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  min-height: 245px;
+  padding: 35px 40px;
+  overflow: hidden;
+  border-radius: 17px;
+  background: #e2f1e5;
+}
+
+.cartao-boas-vindas > div:first-child {
+  max-width: 570px;
+}
+
+.cartao-boas-vindas h3 {
+  margin: 12px 0;
+  color: #205c3a;
+  font-size: 27px;
+  line-height: 1.3;
+}
+
+.cartao-boas-vindas p {
+  max-width: 520px;
+  margin: 0 0 23px;
+  color: #58705f;
+  font-size: 14px;
+}
+
+.ilustracao-boas-vindas {
+  display: grid;
+  place-items: center;
+  width: 145px;
+  height: 145px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.65);
+  font-size: 75px;
+}
+
+.secao-painel {
+  margin-top: 35px;
+}
+
+.titulo-secao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.titulo-secao h3 {
+  margin: 5px 0 0;
+  color: #294b35;
+  font-size: 20px;
+}
+
+.grade-indicadores {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.cartao-indicador {
+  padding: 23px;
+  border: 1px solid #e5ece4;
+  border-radius: 13px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 75, 45, 0.035);
+}
+
+.indicador-icone {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 15px;
+  border-radius: 11px;
+  background: #e8f4e9;
+  font-size: 21px;
+}
+
+.cartao-indicador p {
+  margin: 0 0 5px;
+  color: #718075;
+  font-size: 13px;
+}
+
+.cartao-indicador strong {
+  color: #205c3a;
+  font-size: 29px;
+}
+
+.grade-atalhos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.cartao-atalho {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+  padding: 19px;
+  border: 1px solid #e5ece4;
+  border-radius: 13px;
+  background: #ffffff;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.cartao-atalho:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 18px rgba(35, 75, 45, 0.08);
+}
+
+.cartao-atalho > span:first-child {
+  font-size: 25px;
+}
+
+.cartao-atalho strong {
+  color: #294b35;
+  font-size: 14px;
+}
+
+.cartao-atalho p {
+  margin: 5px 0 0;
+  color: #718075;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.seta-atalho {
+  margin-left: auto;
+  color: #36845a;
+  font-size: 21px;
+}
+
+/* =========================================
+   CARTÕES DE CONTEÚDO
+========================================= */
+
+.cartao-conteudo {
+  margin-bottom: 25px;
+  padding: 27px;
+  border: 1px solid #e6ece5;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(35, 75, 45, 0.035);
+}
+
+.cartao-formulario-doacao {
+  max-width: 900px;
+}
+
+/* =========================================
+   FORMULÁRIOS
+========================================= */
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.grade-formulario {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 19px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.campo-largo {
+  grid-column: 1 / -1;
+}
+
+.campo label {
+  color: #405b47;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
   width: 100%;
   min-width: 0;
-  padding: 12px;
+  padding: 12px 13px;
   border: 1px solid #d5e4d5;
   border-radius: 8px;
   background: #ffffff;
   color: #263b2b;
-  font-family: Arial, sans-serif;
-  font-size: 15px;
+  font-size: 14px;
   outline: none;
-  transition: 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
-#form-doacao input:focus,
-#form-doacao select:focus,
-#form-doacao textarea:focus {
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
   border-color: #267342;
   box-shadow: 0 0 0 3px rgba(38, 115, 66, 0.1);
 }
 
-#form-doacao textarea {
+.campo textarea {
   min-height: 110px;
   resize: vertical;
 }
 
-#form-doacao label[for="doacao-descricao"] {
-  align-self: start;
-  padding-top: 12px;
+.campo select:disabled {
+  background: #f1f4f0;
+  cursor: not-allowed;
 }
 
-#form-doacao #doacao-descricao {
-  grid-column: 2 / -1;
+.acoes-formulario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 /* =========================================
-   BOTÕES DOS FORMULÁRIOS
+   BOTÕES
 ========================================= */
 
-#form-doador button,
-#form-doacao button {
-  grid-column: 1 / -1;
-  width: 100%;
-  padding: 15px;
-  margin-top: 10px;
+.botao-principal,
+.botao-secundario {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 43px;
+  padding: 11px 19px;
   border: none;
-  border-radius: 9px;
-  background: #267342;
-  color: #ffffff;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: bold;
-  cursor: pointer;
   transition:
     background 0.2s,
     transform 0.2s;
 }
 
-#form-doador button:hover,
-#form-doacao button:hover {
-  background: #1d5b34;
-  transform: translateY(-2px);
+.botao-principal {
+  background: #267342;
+  color: #ffffff;
 }
 
-#form-doador button:disabled,
-#form-doacao button:disabled {
+.botao-principal:hover {
+  background: #1d5b34;
+  transform: translateY(-1px);
+}
+
+.botao-secundario {
+  border: 1px solid #d5e4d5;
+  background: #f3f8f2;
+  color: #405b47;
+}
+
+.botao-secundario:hover {
+  background: #e6efe5;
+}
+
+button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 /* =========================================
-   MENSAGENS DE ESTADO
+   MENSAGENS
 ========================================= */
 
-#doador-status,
-#doacao-status {
-  margin-top: 18px;
+.mensagem-status {
+  min-height: 22px;
+  margin: 12px 0 0;
   color: #267342;
+  font-size: 13px;
   font-weight: bold;
   line-height: 1.5;
 }
 
+#api-status {
+  overflow-wrap: anywhere;
+}
+
 /* =========================================
-   CONTENTORES DAS TABELAS
+   TABELAS
 ========================================= */
 
 .tabela-container {
   width: 100%;
   overflow-x: auto;
-  border-radius: 10px;
+  border: 1px solid #e7eee6;
+  border-radius: 9px;
   background: #ffffff;
   scrollbar-width: thin;
   scrollbar-color: #b9c9bb #edf3ed;
@@ -262,10 +524,6 @@ section {
   border-radius: 10px;
 }
 
-/* =========================================
-   ESTILO GERAL DAS TABELAS
-========================================= */
-
 table {
   width: 100%;
   min-width: 760px;
@@ -280,27 +538,28 @@ thead {
 
 th,
 td {
-  padding: 15px 16px;
+  padding: 14px 15px;
   text-align: left;
   border-bottom: 1px solid #e3ece3;
 }
 
 th {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
+  white-space: nowrap;
 }
 
 td {
   color: #405344;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 tbody tr:nth-child(even) {
-  background: #f3f8f2;
+  background: #f7faf6;
 }
 
 tbody tr:hover {
-  background: #e8f2e7;
+  background: #edf5ec;
 }
 
 tbody tr:last-child td {
@@ -312,9 +571,7 @@ tbody tr:last-child td {
 ========================================= */
 
 #tabela-doadores {
-  width: 100%;
   min-width: 950px;
-  table-layout: auto;
 }
 
 #tabela-doadores th,
@@ -324,43 +581,36 @@ tbody tr:last-child td {
 
 #tabela-doadores th:last-child,
 #tabela-doadores td:last-child {
-  min-width: 170px;
+  min-width: 160px;
   text-align: center;
 }
-
-/* =========================================
-   BOTÕES DE AÇÃO DOS DOADORES
-========================================= */
 
 #lista-doadores td:last-child {
   white-space: nowrap;
 }
 
-#lista-doadores button {
+.botao-tabela {
   display: inline-block;
   margin: 3px;
-  padding: 9px 12px;
+  padding: 8px 11px;
   border: none;
   border-radius: 6px;
   background: #267342;
   color: #ffffff;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: bold;
-  cursor: pointer;
-  transition:
-    background 0.2s,
-    transform 0.2s;
 }
 
-#lista-doadores button:hover {
+.botao-tabela:hover {
   background: #1d5b34;
-  transform: translateY(-1px);
 }
 
-#lista-doadores button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+.botao-tabela.botao-excluir {
+  background: #a84343;
+}
+
+.botao-tabela.botao-excluir:hover {
+  background: #873232;
 }
 
 /* =========================================
@@ -368,7 +618,6 @@ tbody tr:last-child td {
 ========================================= */
 
 #tabela-doacoes {
-  width: 100%;
   min-width: 850px;
   table-layout: fixed;
 }
@@ -419,79 +668,130 @@ tbody tr:last-child td {
    RESPONSIVIDADE
 ========================================= */
 
-@media (max-width: 700px) {
-  main {
-    width: calc(100% - 16px);
-    margin: 15px auto;
-    padding: 25px 12px;
-    border-radius: 14px;
+@media (max-width: 1050px) {
+  .conteudo-principal {
+    padding: 30px 24px;
   }
 
-  h1 {
-    font-size: 34px;
-  }
-
-  h2 {
-    font-size: 21px;
-  }
-
-  section {
-    padding: 20px 12px;
-    margin-top: 22px;
-  }
-
-  #form-doador,
-  #form-doacao {
-    grid-template-columns: 1fr;
-    gap: 9px;
-  }
-
-  #form-doador label,
-  #form-doacao label {
-    margin-top: 8px;
-  }
-
-  #form-doador button,
-  #form-doacao button {
-    grid-column: 1;
-    margin-top: 12px;
-  }
-
-  #form-doacao #doacao-descricao {
-    grid-column: 1;
-  }
-
-  #form-doacao label[for="doacao-descricao"] {
-    padding-top: 0;
-  }
-
-  #lista-categorias {
+  .grade-atalhos {
     grid-template-columns: 1fr;
   }
 
-  .tabela-container {
-    border-radius: 8px;
+  .cartao-atalho {
+    max-width: none;
   }
 }
 
-/* =========================================
-   ECRÃS MUITO PEQUENOS
-========================================= */
-
-@media (max-width: 400px) {
-  h1 {
-    font-size: 29px;
+@media (max-width: 760px) {
+  .layout-principal {
+    flex-direction: column;
   }
 
-  h2 {
-    font-size: 19px;
+  .menu-lateral {
+    width: 100%;
+    min-width: 0;
+    min-height: auto;
+    padding: 16px;
   }
 
-  main {
-    padding: 20px 9px;
+  .marca {
+    padding: 0 5px 15px;
   }
 
-  section {
-    padding: 16px 9px;
+  .navegacao {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .navegacao a {
+    justify-content: center;
+    min-height: 42px;
+    padding: 9px;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .menu-rodape {
+    margin-top: 14px;
+    padding-top: 12px;
+  }
+
+  .conteudo-principal {
+    padding: 25px 16px;
+  }
+
+  .cabecalho-pagina {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cabecalho-pagina h2 {
+    font-size: 25px;
+  }
+
+  .cartao-boas-vindas {
+    min-height: auto;
+    padding: 25px;
+  }
+
+  .ilustracao-boas-vindas {
+    width: 85px;
+    height: 85px;
+    font-size: 45px;
+  }
+
+  .cartao-boas-vindas h3 {
+    font-size: 22px;
+  }
+
+  .grade-indicadores {
+    grid-template-columns: 1fr;
+  }
+
+  .cartao-indicador {
+    padding: 18px;
+  }
+
+  .cartao-conteudo {
+    padding: 20px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .conteudo-principal {
+    padding: 20px 12px;
+  }
+
+  .navegacao {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cartao-boas-vindas {
+    padding: 21px;
+  }
+
+  .ilustracao-boas-vindas {
+    display: none;
+  }
+
+  .grade-formulario {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-largo {
+    grid-column: auto;
+  }
+
+  .acoes-formulario {
+    flex-direction: column;
+  }
+
+  .acoes-formulario button {
+    width: 100%;
+  }
+
+  .cartao-conteudo {
+    padding: 17px 11px;
   }
 }
