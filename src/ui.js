@@ -1,3 +1,202 @@
+/* =========================================
+   TELA DE LOGIN
+========================================= */
+
+export function montarTelaLogin() {
+  const app = document.querySelector("#app");
+
+  app.innerHTML = `
+    <style>
+      .tela-login {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: #f3f7f3;
+        box-sizing: border-box;
+      }
+
+      .cartao-login {
+        width: 100%;
+        max-width: 430px;
+        padding: 40px;
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 12px 40px rgba(25, 83, 55, 0.10);
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      .login-marca-icone {
+        width: 62px;
+        height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 14px;
+        border-radius: 17px;
+        background: #176b49;
+        color: #ffffff;
+        font-size: 32px;
+        font-weight: 800;
+      }
+
+      .cartao-login h1 {
+        margin: 0;
+        color: #195b3d;
+        font-size: 29px;
+      }
+
+      .login-subtitulo {
+        margin: 8px 0 30px;
+        color: #718078;
+        font-size: 14px;
+      }
+
+      .cartao-login h2 {
+        margin: 0 0 8px;
+        color: #244d37;
+        font-size: 23px;
+      }
+
+      .login-descricao {
+        margin: 0 0 28px;
+        color: #718078;
+        font-size: 14px;
+      }
+
+      .formulario-login {
+        text-align: left;
+      }
+
+      .campo-login {
+        margin-bottom: 19px;
+      }
+
+      .campo-login label {
+        display: block;
+        margin-bottom: 8px;
+        color: #315743;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .campo-login input {
+        width: 100%;
+        min-height: 47px;
+        padding: 12px 14px;
+        border: 1px solid #d9e4dc;
+        border-radius: 9px;
+        background: #ffffff;
+        color: #263b30;
+        font-size: 15px;
+        box-sizing: border-box;
+        outline: none;
+      }
+
+      .campo-login input:focus {
+        border-color: #278052;
+        box-shadow: 0 0 0 3px rgba(39, 128, 82, 0.12);
+      }
+
+      .botao-login {
+        width: 100%;
+        min-height: 48px;
+        margin-top: 8px;
+        border: 0;
+        border-radius: 9px;
+        background: #176b49;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .botao-login:hover {
+        background: #10583a;
+      }
+
+      .botao-login:disabled {
+        opacity: 0.65;
+        cursor: wait;
+      }
+
+      .mensagem-status-login {
+        min-height: 20px;
+        margin: 16px 0 0;
+        color: #b42318;
+        font-size: 13px;
+        text-align: center;
+      }
+
+      @media (max-width: 480px) {
+        .cartao-login {
+          padding: 28px 22px;
+        }
+      }
+    </style>
+
+    <main class="tela-login">
+      <section class="cartao-login">
+        <div class="login-marca-icone">N</div>
+
+        <h1>NutriVida</h1>
+        <p class="login-subtitulo">Gestão de doações alimentares</p>
+
+        <h2>Bem-vindo!</h2>
+        <p class="login-descricao">
+          Entre com os seus dados para continuar.
+        </p>
+
+        <form id="form-login" class="formulario-login">
+          <div class="campo-login">
+            <label for="login-email">E-mail</label>
+            <input
+              id="login-email"
+              name="email"
+              type="email"
+              placeholder="seu@email.com"
+              autocomplete="username"
+              required
+            />
+          </div>
+
+          <div class="campo-login">
+            <label for="login-senha">Senha</label>
+            <input
+              id="login-senha"
+              name="senha"
+              type="password"
+              placeholder="Digite sua senha"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <button
+            id="botao-login"
+            class="botao-login"
+            type="submit"
+          >
+            Entrar
+          </button>
+
+          <p
+            id="login-status"
+            class="mensagem-status-login"
+            aria-live="polite"
+          ></p>
+        </form>
+      </section>
+    </main>
+  `;
+}
+
+/* =========================================
+   ESTRUTURA PRINCIPAL DA APLICAÇÃO
+========================================= */
+
 // Cria a estrutura principal da aplicação
 export function montarInterface() {
   document.querySelector("#app").innerHTML = `
@@ -64,6 +263,10 @@ export function renderizarPagina(hash) {
     }
   });
 }
+
+/* =========================================
+   PÁGINA INICIAL
+========================================= */
 
 // Página inicial
 function paginaInicio() {
@@ -159,6 +362,10 @@ function paginaInicio() {
     </section>
   `;
 }
+
+/* =========================================
+   PÁGINA DE DOADORES
+========================================= */
 
 // Página de cadastro e consulta de doadores
 function paginaDoadores() {
@@ -261,6 +468,10 @@ function paginaDoadores() {
   `;
 }
 
+/* =========================================
+   PÁGINA DE NOVA DOAÇÃO
+========================================= */
+
 // Página de registo de doação
 function paginaNovaDoacao() {
   return `
@@ -336,6 +547,10 @@ function paginaNovaDoacao() {
   `;
 }
 
+/* =========================================
+   PÁGINA DE CONSULTA DE DOAÇÕES
+========================================= */
+
 // Página de consulta das doações
 function paginaDoacoes() {
   return `
@@ -377,6 +592,10 @@ function paginaDoacoes() {
   `;
 }
 
+/* =========================================
+   FUNÇÕES DE APOIO DA INTERFACE
+========================================= */
+
 // Atualiza o estado da API
 export function atualizarStatusAPI(dados) {
   const status = document.querySelector("#api-status");
@@ -394,6 +613,7 @@ export function atualizarIndicadores(doadores, doacoes, categorias) {
 
   if (totalDoadores) totalDoadores.textContent = doadores.length;
   if (totalDoacoes) totalDoacoes.textContent = doacoes.length;
+
   if (totalCategorias) {
     totalCategorias.textContent = categorias.filter((categoria) => Boolean(categoria.ativo)).length;
   }

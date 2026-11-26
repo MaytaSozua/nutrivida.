@@ -1,13 +1,20 @@
 import "dotenv/config";
 import express from "express";
 import db from "./database.js";
+import auth, { autenticar } from "./auth.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// Verifica se a API está funcionando
+// Verifica se a chave JWT está configurada
+if (!process.env.JWT_SECRET) {
+  console.error("Erro: JWT_SECRET não está configurado no arquivo .env");
+  process.exit(1);
+}
+
+// Verifica se a API está funcionando (rota pública)
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
@@ -15,6 +22,12 @@ app.get("/api/health", (req, res) => {
     hora: new Date().toISOString(),
   });
 });
+
+// Rotas de autenticação (públicas)
+app.use("/api/auth", auth);
+
+// A partir daqui, todas as rotas /api exigem autenticação
+app.use("/api", autenticar);
 
 // Lista as categorias cadastradas no MySQL
 app.get("/api/categorias", async (req, res) => {

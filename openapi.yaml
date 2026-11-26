@@ -1,0 +1,381 @@
+openapi: 3.0.3
+
+info:
+  title: API NutriVida
+  description: API para gerenciamento de doadores, categorias e doações do sistema NutriVida.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: Servidor local
+
+tags:
+  - name: Autenticação
+    description: Login e autenticação dos usuários
+  - name: Sistema
+    description: Verificação da API
+  - name: Categorias
+    description: Consulta das categorias de alimentos
+  - name: Doadores
+    description: Cadastro e gerenciamento de doadores
+  - name: Doações
+    description: Registro e consulta de doações
+
+paths:
+  /api/health:
+    get:
+      tags:
+        - Sistema
+      summary: Verificar funcionamento da API
+      security: []
+      responses:
+        "200":
+          description: API funcionando corretamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  app:
+                    type: string
+                    example: NutriVida
+                  hora:
+                    type: string
+                    format: date-time
+
+  /api/auth/login:
+    post:
+      tags:
+        - Autenticação
+      summary: Realizar login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - senha
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: voluntario@nutrivida.com
+                senha:
+                  type: string
+                  format: password
+                  example: senha_de_exemplo
+      responses:
+        "200":
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: Login realizado com sucesso!
+                  token:
+                    type: string
+                    description: Token JWT para autenticação
+                  usuario:
+                    type: object
+                    properties:
+                      nome:
+                        type: string
+                      email:
+                        type: string
+                      perfil:
+                        type: string
+        "400":
+          description: Dados obrigatórios não informados
+        "401":
+          description: E-mail ou senha inválidos
+        "500":
+          description: Erro interno
+
+  /api/categorias:
+    get:
+      tags:
+        - Categorias
+      summary: Listar categorias
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista de categorias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Categoria"
+        "401":
+          description: Acesso não autorizado
+        "500":
+          description: Erro ao consultar categorias
+
+  /api/doadores:
+    get:
+      tags:
+        - Doadores
+      summary: Listar doadores
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista de doadores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Doador"
+        "401":
+          description: Acesso não autorizado
+        "500":
+          description: Erro ao consultar doadores
+
+    post:
+      tags:
+        - Doadores
+      summary: Cadastrar doador
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DoadorEntrada"
+      responses:
+        "201":
+          description: Doador cadastrado com sucesso
+        "400":
+          description: Campos obrigatórios não informados
+        "409":
+          description: CPF já cadastrado
+        "401":
+          description: Acesso não autorizado
+
+  /api/doadores/{id}:
+    put:
+      tags:
+        - Doadores
+      summary: Editar doador
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DoadorEntrada"
+      responses:
+        "200":
+          description: Doador atualizado com sucesso
+        "400":
+          description: Identificador ou dados inválidos
+        "404":
+          description: Doador não encontrado
+        "409":
+          description: CPF já cadastrado
+        "401":
+          description: Acesso não autorizado
+
+    delete:
+      tags:
+        - Doadores
+      summary: Excluir doador
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Doador excluído com sucesso
+        "400":
+          description: Identificador inválido
+        "404":
+          description: Doador não encontrado
+        "409":
+          description: Existem doações vinculadas ao doador
+        "401":
+          description: Acesso não autorizado
+
+  /api/doacoes:
+    get:
+      tags:
+        - Doações
+      summary: Listar doações
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista de doações com informações do doador e categoria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Doacao"
+        "401":
+          description: Acesso não autorizado
+        "500":
+          description: Erro ao consultar doações
+
+    post:
+      tags:
+        - Doações
+      summary: Registrar doação
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DoacaoEntrada"
+      responses:
+        "201":
+          description: Doação registrada com sucesso
+        "400":
+          description: Dados inválidos ou referência inexistente
+        "401":
+          description: Acesso não autorizado
+        "500":
+          description: Erro ao registrar doação
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Categoria:
+      type: object
+      properties:
+        id_categoria:
+          type: integer
+        nome:
+          type: string
+        descricao:
+          type: string
+          nullable: true
+        ativo:
+          type: integer
+          example: 1
+
+    Doador:
+      type: object
+      properties:
+        id_doador:
+          type: integer
+        nome:
+          type: string
+        cpf:
+          type: string
+        telefone:
+          type: string
+        rua:
+          type: string
+        numero:
+          type: string
+        bairro:
+          type: string
+        cidade:
+          type: string
+
+    DoadorEntrada:
+      type: object
+      required:
+        - nome
+        - cpf
+        - telefone
+        - rua
+        - numero
+        - bairro
+        - cidade
+      properties:
+        nome:
+          type: string
+        cpf:
+          type: string
+        telefone:
+          type: string
+        rua:
+          type: string
+        numero:
+          type: string
+        bairro:
+          type: string
+        cidade:
+          type: string
+
+    Doacao:
+      type: object
+      properties:
+        id_doacao:
+          type: integer
+        id_doador:
+          type: integer
+        nome_doador:
+          type: string
+        id_categoria:
+          type: integer
+        nome_categoria:
+          type: string
+        quantidade:
+          type: integer
+        data_doacao:
+          type: string
+          format: date-time
+        descricao:
+          type: string
+        status:
+          type: string
+          enum:
+            - pendente
+            - recebida
+            - distribuida
+            - cancelada
+
+    DoacaoEntrada:
+      type: object
+      required:
+        - id_doador
+        - id_categoria
+        - quantidade
+        - data_doacao
+        - descricao
+      properties:
+        id_doador:
+          type: integer
+        id_categoria:
+          type: integer
+        quantidade:
+          type: integer
+          minimum: 1
+        data_doacao:
+          type: string
+          format: date
+        descricao:
+          type: string

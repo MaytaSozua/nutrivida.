@@ -1,0 +1,79 @@
+@baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibm9tZSI6IlZvbHVudMOhcmlvIE51dHJpVmlkYSIsInBlcmZpbCI6InZvbHVudGFyaW8iLCJpYXQiOjE3OTU3MDc0NDYsImV4cCI6MTc5NTczNjI0Nn0.29HkfDvP5Yme-VRVRdq3Mkrph2KoCr1i9Zyrx2udrmk
+GET {{baseUrl}}/api/health
+
+### 2. Fazer login
+# Execute esta requisição primeiro.
+# Depois copie o token da resposta e coloque na variável @token acima.
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "voluntario@nutrivida.com",
+  "senha": "Maytabernardes18@"
+}
+
+### 3. Consultar categorias
+GET {{baseUrl}}/api/categorias
+Authorization: Bearer {{token}}
+
+### 4. Consultar doadores
+GET {{baseUrl}}/api/doadores
+Authorization: Bearer {{token}}
+
+### 5. Cadastrar doador
+POST {{baseUrl}}/api/doadores
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nome": "Maria da Silva",
+  "cpf": "12345678901",
+  "telefone": "11999999999",
+  "rua": "Rua das Flores",
+  "numero": "100",
+  "bairro": "Centro",
+  "cidade": "São Paulo"
+}
+
+### 6. Editar doador
+# Substitua 1 pelo ID de um doador existente.
+PUT {{baseUrl}}/api/doadores/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nome": "Maria da Silva Atualizada",
+  "cpf": "12345678901",
+  "telefone": "11988888888",
+  "rua": "Rua das Flores",
+  "numero": "100",
+  "bairro": "Centro",
+  "cidade": "São Paulo"
+}
+
+### 7. Excluir doador
+# Só execute se realmente quiser excluir um doador de teste.
+DELETE {{baseUrl}}/api/doadores/1
+Authorization: Bearer {{token}}
+
+### 8. Registrar doação
+POST {{baseUrl}}/api/doacoes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id_doador": 7,
+  "id_categoria": 1,
+  "quantidade": 10,
+  "data_doacao": "2026-11-26",
+  "descricao": "Doação de teste - Grãos e Cereais"
+}
+
+### 9. Consultar doações
+GET {{baseUrl}}/api/doacoes
+Authorization: Bearer {{token}}
+
+### 10. Testar acesso sem token
+# Resultado esperado: 401 Unauthorized
+GET {{baseUrl}}/api/doadores

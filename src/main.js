@@ -9,10 +9,14 @@ import {
   excluirDoador,
   cadastrarDoacao,
   carregarDoacoes,
+  entrar,
+  sair,
+  estaAutenticado,
 } from "./api.js";
 
 import {
   montarInterface,
+  montarTelaLogin,
   renderizarPagina,
   atualizarStatusAPI,
   atualizarIndicadores,
@@ -34,12 +38,43 @@ function obterRotaAtual() {
   return location.hash.replace("#", "") || "/inicio";
 }
 
+// Cria o botão de saída no menu lateral
+function adicionarBotaoSair() {
+  const navegacao = document.querySelector(".navegacao");
+
+  if (!navegacao || document.querySelector("#botao-sair")) return;
+
+  const botao = document.createElement("button");
+
+  botao.id = "botao-sair";
+  botao.type = "button";
+  botao.textContent = "Sair da conta";
+  botao.className = "botao-sair";
+
+  botao.style.width = "100%";
+  botao.style.padding = "12px 16px";
+  botao.style.marginTop = "24px";
+  botao.style.border = "1px solid rgba(255,255,255,0.35)";
+  botao.style.borderRadius = "9px";
+  botao.style.background = "transparent";
+  botao.style.color = "#ffffff";
+  botao.style.fontSize = "14px";
+  botao.style.fontWeight = "600";
+  botao.style.textAlign = "left";
+  botao.style.cursor = "pointer";
+
+  navegacao.insertAdjacentElement("afterend", botao);
+}
+
 // Atualiza a lista de doadores
 async function atualizarListaDoadores() {
   try {
     doadoresAtuais = await carregarDoadores();
+
     exibirDoadores(doadoresAtuais);
+
     preencherSelecoesDoacao(doadoresAtuais, categoriasAtuais);
+
     atualizarIndicadores(doadoresAtuais, doacoesAtuais, categoriasAtuais);
   } catch (erro) {
     const lista = document.querySelector("#lista-doadores");
@@ -60,7 +95,9 @@ async function atualizarListaDoadores() {
 async function atualizarListaDoacoes() {
   try {
     doacoesAtuais = await carregarDoacoes();
+
     exibirDoacoes(doacoesAtuais);
+
     atualizarIndicadores(doadoresAtuais, doacoesAtuais, categoriasAtuais);
   } catch (erro) {
     const lista = document.querySelector("#lista-doacoes");
@@ -87,7 +124,9 @@ async function carregarDadosDaPagina() {
 
   if (rota === "/doacoes/nova") {
     await atualizarListaDoadores();
+
     preencherSelecoesDoacao(doadoresAtuais, categoriasAtuais);
+
     definirDataAtualDoacao();
   }
 
@@ -102,6 +141,11 @@ async function carregarDadosDaPagina() {
 
 // Navegação entre as páginas
 function navegarParaPagina() {
+  if (!estaAutenticado()) {
+    montarTelaLogin();
+    return;
+  }
+
   renderizarPagina(location.hash);
 
   carregarDadosDaPagina().catch((erro) => {
@@ -109,10 +153,7 @@ function navegarParaPagina() {
   });
 }
 
-// Monta a interface inicial
-montarInterface();
-
-// Carrega os dados iniciais da aplicação
+// Carrega os dados da aplicação depois do login
 async function iniciarAplicacao() {
   try {
     const dadosAPI = await verificarAPI();
@@ -145,10 +186,25 @@ async function iniciarAplicacao() {
     console.error("Erro ao carregar doações:", erro);
   }
 
+  // Se não houver autenticação, apresenta o login
+  if (!estaAutenticado()) {
+    montarTelaLogin();
+    return;
+  }
+
   preencherSelecoesDoacao(doadoresAtuais, categoriasAtuais);
+
   atualizarIndicadores(doadoresAtuais, doacoesAtuais, categoriasAtuais);
 
   await carregarDadosDaPagina();
+}
+
+// Abre o painel principal depois da autenticação
+async function abrirPainel() {
+  montarInterface();
+  adicionarBotaoSair();
+
+  await iniciarAplicacao();
 }
 
 // Quando o utilizador muda de página pelo menu
@@ -158,11 +214,13 @@ window.addEventListener("hashchange", navegarParaPagina);
 document.addEventListener("input", (evento) => {
   if (evento.target.closest("#form-doador")) {
     const status = document.querySelector("#doador-status");
+
     if (status) status.textContent = "";
   }
 
   if (evento.target.closest("#form-doacao")) {
     const status = document.querySelector("#doacao-status");
+
     if (status) status.textContent = "";
   }
 });
@@ -170,13 +228,72 @@ document.addEventListener("input", (evento) => {
 document.addEventListener("change", (evento) => {
   if (evento.target.closest("#form-doador")) {
     const status = document.querySelector("#doador-status");
+
     if (status) status.textContent = "";
   }
 
   if (evento.target.closest("#form-doacao")) {
     const status = document.querySelector("#doacao-status");
+
     if (status) status.textContent = "";
   }
+});
+
+// Processa o formulário de login
+document.addEventListener("submit", async (evento) => {
+  if (evento.target.id !== "form-login") return;
+
+  evento.preventDefault();
+
+  const formulario = evento.target;
+  const botao = document.querySelector("#botao-login");
+  const status = document.querySelector("#login-status");
+
+  const dados = Object.fromEntries(new FormData(formulario));
+
+  try {
+    botao.disabled = true;
+    botao.textContent = "Entrando...";
+    status.textContent = "";
+    status.className = "mensagem-status";
+
+    await entrar(dados.email, dados.senha);
+
+    await abrirPainel();
+  } catch (erro) {
+    status.textContent = erro.message;
+    status.className = "mensagem-status erro-login";
+  } finally {
+    const botaoAtual = document.querySelector("#botao-login");
+
+    if (botaoAtual) {
+      botaoAtual.disabled = false;
+      botaoAtual.textContent = "Entrar";
+    }
+  }
+});
+
+// Processa o encerramento da sessão
+document.addEventListener("click", (evento) => {
+  if (evento.target.id !== "botao-sair") return;
+
+  const confirmar = window.confirm("Tem certeza que deseja sair do NutriVida?");
+
+  if (!confirmar) return;
+
+  // Remove o token e os dados do utilizador
+  sair();
+
+  // Limpa os dados mantidos na memória
+  doadoresAtuais = [];
+  categoriasAtuais = [];
+  doacoesAtuais = [];
+
+  // Volta para o início da aplicação
+  history.replaceState(null, "", window.location.pathname + window.location.search);
+
+  // Apresenta novamente a tela de login
+  montarTelaLogin();
 });
 
 // Cadastra ou edita um doador
@@ -190,6 +307,7 @@ document.addEventListener("submit", async (evento) => {
   const botao = document.querySelector("#botao-salvar-doador");
 
   const dados = Object.fromEntries(new FormData(formulario));
+
   const idEdicao = formulario.dataset.editandoId;
 
   try {
@@ -201,6 +319,7 @@ document.addEventListener("submit", async (evento) => {
       const resultado = await editarDoador(idEdicao, dados);
 
       cancelarEdicaoDoador();
+
       status.textContent = resultado.mensagem;
     } else {
       status.textContent = "Cadastrando doador...";
@@ -208,12 +327,14 @@ document.addEventListener("submit", async (evento) => {
       const resultado = await cadastrarDoador(dados);
 
       formulario.reset();
+
       status.textContent = resultado.mensagem;
     }
 
     await atualizarListaDoadores();
   } catch (erro) {
     status.textContent = erro.message;
+
     console.error("Erro ao salvar doador:", erro);
   } finally {
     botao.disabled = false;
@@ -238,20 +359,23 @@ document.addEventListener("submit", async (evento) => {
 
   try {
     botao.disabled = true;
+
     status.textContent = "Registrando doação...";
 
     const resultado = await cadastrarDoacao(dados);
 
     formulario.reset();
+
     definirDataAtualDoacao();
 
     status.textContent = resultado.mensagem;
 
-    // Atualiza os dados para que os indicadores também fiquem corretos
     doacoesAtuais = await carregarDoacoes();
+
     atualizarIndicadores(doadoresAtuais, doacoesAtuais, categoriasAtuais);
   } catch (erro) {
     status.textContent = erro.message;
+
     console.error("Erro ao registrar doação:", erro);
   } finally {
     botao.disabled = false;
@@ -265,16 +389,21 @@ document.addEventListener("click", async (evento) => {
   if (!botao) return;
 
   const tabela = botao.closest("#lista-doadores");
+
   if (!tabela) return;
 
   const id = Number(botao.dataset.id);
   const acao = botao.dataset.acao;
 
   const status = document.querySelector("#doador-status");
+
   const doador = doadoresAtuais.find((item) => Number(item.id_doador) === id);
 
   if (!doador) {
-    if (status) status.textContent = "Doador não encontrado na lista.";
+    if (status) {
+      status.textContent = "Doador não encontrado na lista.";
+    }
+
     return;
   }
 
@@ -290,6 +419,7 @@ document.addEventListener("click", async (evento) => {
 
     try {
       botao.disabled = true;
+
       status.textContent = "Excluindo doador...";
 
       const resultado = await excluirDoador(id);
@@ -305,6 +435,7 @@ document.addEventListener("click", async (evento) => {
       await atualizarListaDoadores();
     } catch (erro) {
       status.textContent = erro.message;
+
       console.error("Erro ao excluir doador:", erro);
     } finally {
       botao.disabled = false;
@@ -319,7 +450,14 @@ document.addEventListener("click", (evento) => {
   }
 });
 
-// Inicia a aplicação
-iniciarAplicacao().catch((erro) => {
-  console.error("Erro inesperado ao iniciar a aplicação:", erro);
-});
+// Inicializa a aplicação conforme o estado da autenticação
+if (estaAutenticado()) {
+  abrirPainel().catch((erro) => {
+    console.error("Erro ao iniciar o painel:", erro);
+
+    sair();
+    montarTelaLogin();
+  });
+} else {
+  montarTelaLogin();
+}
